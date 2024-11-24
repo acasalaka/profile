@@ -16,10 +16,23 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED) // Strategy for table-per-subclass inheritance
+@Table(name = "end_user")
 public class EndUser {
+
+    public enum Role {
+        ADMIN,
+        NURSE,
+        PATIENT,
+        DOCTOR,
+        PHARMACIST
+    }
+
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -40,6 +53,11 @@ public class EndUser {
     @NotNull
     @Column(name = "gender", nullable = false)
     private boolean gender;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
