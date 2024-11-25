@@ -3,8 +3,8 @@ spring:
         name: profile50
     datasource:
         url: jdbc:postgresql://localhost:15001/profile50
-        username: postgres
-        password: secret99
+        username: tk-apap-50
+        password: tk-apap-50
     jpa:
         properties:
             hibernate:
