@@ -13,6 +13,10 @@ spring:
                         non_contextual_creation: true
                 dialect: org.hibernate.dialect.PostgreSQLDialect
         hibernate:
-            ddl-auto: update
+            ddl-auto: create
 server:
+    profile:
+        app:
+            jwtSecret: "YhEwGneRYubPRrqHmZQVeRrsGZPbbNwFndF"
+            jwtExpirationMs: 86400000
     port: 8084
