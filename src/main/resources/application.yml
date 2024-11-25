@@ -1,4 +1,6 @@
 spring:
+    main:
+        allow-circular-references: true
     application:
         name: profile50
     datasource:
@@ -15,8 +17,8 @@ spring:
         hibernate:
             ddl-auto: create
 server:
-    profile:
-        app:
-            jwtSecret: "YhEwGneRYubPRrqHmZQVeRrsGZPbbNwFndF"
-            jwtExpirationMs: 86400000
     port: 8084
+profile:
+    app:
+        jwtSecret: "YhEwGneRYubPRrqHmZQVeRrsGZPbbNwFndF"
+        jwtExpirationMs: 86400000
