@@ -16,13 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "doctor")
-public class Doctor extends EndUser{
+public class Doctor extends EndUser {
+
     @NotNull
     @Column(name = "specialist", nullable = false)
     private int specialist;
 
     @NotNull
-    @Column(name = "yearsOfExperience", nullable = false)
+    @Column(name = "years_of_experience", nullable = false)
     private int yearsOfExperience;
 
     @NotNull
@@ -30,8 +31,8 @@ public class Doctor extends EndUser{
     private Long fee;
 
     @ElementCollection
-    @CollectionTable(name = "schedules", joinColumns = @JoinColumn(name = "doctorSchedules"))
-    @Column(name = "schedules")
+    @CollectionTable(name = "doctor_schedules", joinColumns = @JoinColumn(name = "doctor_id"))
+    @Column(name = "schedule")
     private List<Integer> schedules;
 
     public String assignGender() {
