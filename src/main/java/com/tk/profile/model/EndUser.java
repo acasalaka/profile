@@ -72,4 +72,8 @@ public class EndUser {
     @NotNull
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
+
+    public String assignGender() {
+        return isGender() ? "Perempuan" : "Laki-laki";
+    }
 }

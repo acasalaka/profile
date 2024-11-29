@@ -31,7 +31,7 @@ public class Doctor extends EndUser {
     private Long fee;
 
     @ElementCollection
-    @CollectionTable(name = "doctor_schedules", joinColumns = @JoinColumn(name = "doctor_id"))
+    @CollectionTable(name = "schedules", joinColumns = @JoinColumn(name = "doctor_id"))
     @Column(name = "schedule")
     private List<Integer> schedules;
 
