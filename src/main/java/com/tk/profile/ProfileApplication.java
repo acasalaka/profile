@@ -3,6 +3,7 @@ package com.tk.profile;
 import com.github.javafaker.Faker;
 import com.tk.profile.model.Doctor;
 import com.tk.profile.model.EndUser;
+import com.tk.profile.repository.EndUserDb;
 import com.tk.profile.restservice.UserRestService;
 import com.tk.profile.model.Patient;
 import com.tk.profile.service.DoctorService;
@@ -25,8 +26,9 @@ public class ProfileApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(DoctorService doctorService, PatientService patientService, UserRestService userRestService) {
+    CommandLineRunner run(EndUserDb endUserDb, DoctorService doctorService, PatientService patientService, UserRestService userRestService) {
         return args -> {
+
             var faker = new Faker(new Locale("in-ID"));
             var random = new Random();
 
@@ -85,6 +87,18 @@ public class ProfileApplication {
                 patient.setPClass(random.nextInt(1, 4)); // Random class between 1 and 3
 
                 patientService.createPatient(patient);
+
+                if (endUserDb.findByRole(EndUser.Role.ADMIN) == null) {
+                    var admin = new EndUser();
+                    admin.setName("Admin");
+                    admin.setUsername("admin");
+                    admin.setPassword(userRestService.hashPassword("admin"));
+                    admin.setRole(EndUser.Role.ADMIN);
+                    admin.setEmail("admin@example.com");
+                    admin.setGender(true);
+
+                    endUserDb.save(admin);
+                }
             }
         };
     }
