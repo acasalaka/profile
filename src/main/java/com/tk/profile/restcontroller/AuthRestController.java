@@ -32,18 +32,18 @@ public class AuthRestController {
         BaseResponseDTO<LoginJwtResponseDTO> response = new BaseResponseDTO<>();
 
         try {
-            // Authenticate the user
+            // Authenticate the user using email instead of username
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequestDTO.getUsername(),
+                            loginRequestDTO.getEmail(),
                             loginRequestDTO.getPassword()));
 
             // Set the authentication in the SecurityContext for session consistency
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Generate JWT token
-            String username = authentication.getName(); // Extract username
-            String token = jwtUtils.generateJwtToken(username); // Generate token
+            String email = authentication.getName(); // Extract email
+            String token = jwtUtils.generateJwtToken(email); // Generate token
 
             // Build success response
             LoginJwtResponseDTO loginResponse = new LoginJwtResponseDTO(token);
@@ -57,7 +57,7 @@ public class AuthRestController {
         } catch (AuthenticationException e) {
             // Build failure response
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setMessage("Username atau Password salah!");
+            response.setMessage("Email atau Password salah!");
             response.setTimestamp(new Date());
             response.setData(null);
 
@@ -65,5 +65,6 @@ public class AuthRestController {
         }
     }
 
-}
+  
 
+}

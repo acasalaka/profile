@@ -11,7 +11,8 @@ import java.util.UUID;
 @Repository
 public interface EndUserDb extends JpaRepository<EndUser, UUID> {
     EndUser findByUsername(String username);
-    EndUser findByRole(EndUser.Role role);
+    EndUser findByEmail(String email);
+    List<EndUser> findByRole(EndUser.Role role);
     List<EndUser> findAllByIsDeletedFalse();
     List<EndUser> findAllByRoleAndIsDeletedFalse(EndUser.Role role);
 }

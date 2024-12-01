@@ -8,6 +8,6 @@ import lombok.Data;
 @NoArgsConstructor
 @Data
 public class LoginJwtRequestDTO {
-    private String username;
+    private String email;
     private String password;
 }
