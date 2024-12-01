@@ -21,9 +21,9 @@ public class JwtUtils {
     @Value("${profile.app.jwtExpirationMs}")
     private int jwtExpirationMs;
  
-    public String generateJwtToken(String username){
+    public String generateJwtToken(String email){
         return Jwts.builder()
-        .subject(username)
+        .subject(email)
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
         .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))

@@ -1,4 +1,4 @@
-package com.tk.profile.DTO.request;
+package com.tk.profile.restdto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

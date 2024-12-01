@@ -23,12 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private EndUserDb EndUserDb;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        EndUser user = EndUserDb.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        EndUser user = EndUserDb.findByEmail(email);
 
         Set<GrantedAuthority> grantedAuthoritySet = new HashSet<>();
         grantedAuthoritySet.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
         return new User(user.getUsername(), user.getPassword(), grantedAuthoritySet);
     }
+    
 }
