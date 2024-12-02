@@ -7,8 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -121,28 +124,37 @@ public class Doctor extends EndUser {
         return title + " " + getName();
     }
 
-    public String scheduleString(int schedules) {
-        return switch (schedules) {
-            case 1 -> "Sunday";
-            case 2 -> "Monday";
-            case 3 -> "Tuesday";
-            case 4 -> "Wednesday";
-            case 5 -> "Thursday";
-            case 6 -> "Friday";
-            case 7 -> "Saturday";
-            default -> throw new IllegalStateException("Unexpected value: " + schedules);
-        };
-    }
+    public List<String> getFourWeeksSchedule() {
+        List<String> scheduleDates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID"));
 
-    public List<String> getScheduleDayStrings() {
-        List<String> dayNames = new ArrayList<>();
+        for (int i = 0; i < 28; i++) {
+            int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        for (Integer schedule : schedules) {
-            String dayName = scheduleString(schedule);
-            dayNames.add(dayName);
+            for (Integer schedule : schedules) {
+                if (currentDayOfWeek == convertScheduleToCalendarDay(schedule)) {
+                    scheduleDates.add(dateFormatter.format(calendar.getTime()));
+                }
+            }
+
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        return dayNames;
+        return scheduleDates;
+    }
+
+    private int convertScheduleToCalendarDay(int schedule) {
+        return switch (schedule) {
+            case 1 -> Calendar.SUNDAY;
+            case 2 -> Calendar.MONDAY;
+            case 3 -> Calendar.TUESDAY;
+            case 4 -> Calendar.WEDNESDAY;
+            case 5 -> Calendar.THURSDAY;
+            case 6 -> Calendar.FRIDAY;
+            case 7 -> Calendar.SATURDAY;
+            default -> throw new IllegalStateException("Unexpected value: " + schedule);
+        };
     }
 
     public String sanitizeName(String name) {
