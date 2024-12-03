@@ -92,36 +92,14 @@ public class Doctor extends EndUser {
         };
     }
 
-    public String getSpecialistString() {
-        return switch (specialist) {
-            case 1 -> "Dokter Gigi";
-            case 2 -> "Spesialis Anak";
-            case 3 -> "Bedah";
-            case 4 -> "Bedah Plastik, Rekonstruksi, dan Estetik";
-            case 5 -> "Jantung dan Pembuluh Darah";
-            case 6 -> "Kulit dan Kelamin";
-            case 7 -> "Mata";
-            case 8 -> "Obstetri dan Ginekologi";
-            case 9 -> "Penyakit Dalam";
-            case 10 -> "Paru";
-            case 11 -> "Telinga, Hidung, Tenggorokan, Bedah Kepala Leher";
-            case 12 -> "Radiologi";
-            case 13 -> "Kesehatan Jiwa";
-            case 14 -> "Anestesi";
-            case 15 -> "Neurologi";
-            case 16 -> "Urologi";
-            default -> "Dokter Umum";
-        };
-    }
-
-    public String getName(int specialist) {
-        String title = getTitle(this.specialist);
-        String degree = getDegree(this.specialist);
+    public String setDoctorName(String name, int specialist) {
+        String title = getTitle(specialist);
+        String degree = getDegree(specialist);
 
         if (!degree.isEmpty()) {
-            return title + " " + getName() + ", " + degree;
+            return title + " " + name + ", " + degree;
         }
-        return title + " " + getName();
+        return title + " " + name;
     }
 
     public List<String> getFourWeeksSchedule() {
