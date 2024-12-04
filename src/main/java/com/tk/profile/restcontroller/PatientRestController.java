@@ -51,11 +51,11 @@ public class PatientRestController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/get-id/{id}")
-    public ResponseEntity<?> detailPatientByID(@PathVariable("id") UUID id) {
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detailPatientWithId(@PathVariable("id") String id) {
         var baseResponseDTO = new BaseResponseDTO<PatientResponseDTO>();
 
-        PatientResponseDTO patient = patientRestService.getPatientByID(id);
+        PatientResponseDTO patient = patientRestService.getPatientById(UUID.fromString(id));
 
         if (patient == null) {
             baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
@@ -66,11 +66,10 @@ public class PatientRestController {
 
         baseResponseDTO.setStatus(HttpStatus.OK.value());
         baseResponseDTO.setData(patient);
-        baseResponseDTO.setMessage(String.format("Patient dengan ID %s berhasil ditemukan", patient.getNik()));
+        baseResponseDTO.setMessage(String.format("Patient dengan NIK %s berhasil ditemukan", patient.getNik()));
         baseResponseDTO.setTimestamp(new Date());
 
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
-
 
 }
