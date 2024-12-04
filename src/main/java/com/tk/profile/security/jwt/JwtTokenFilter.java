@@ -1,7 +1,8 @@
 package com.tk.profile.security.jwt;
 
 import java.io.IOException;
- 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +32,29 @@ public class JwtTokenFilter extends OncePerRequestFilter{
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
  
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
-        try{
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
             String jwt = parseJwt(request);
-            if(jwt != null && jwtUtils.validateJwtToken(jwt)){
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
- 
+                String role = jwtUtils.getRoleFromJwtToken(jwt); // Get the role from JWT
+
                 UserDetails userDetails = userDetailService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
- 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+                // Check if the user has one of the allowed roles
+                if (Arrays.asList("ADMIN", "DOCTOR", "PATIENT", "NURSE").contains(role)) {
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("You do not have access to this resource!");
+                    return;
+                }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;

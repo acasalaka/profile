@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tk.profile.restdto.request.LoginJwtRequestDTO;
 import com.tk.profile.restdto.response.BaseResponseDTO;
 import com.tk.profile.restdto.response.LoginJwtResponseDTO;
+import com.tk.profile.restservice.UserRestService;
 import com.tk.profile.security.jwt.JwtUtils;
 
 import java.util.Date;
@@ -23,6 +24,9 @@ public class AuthRestController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -42,8 +46,8 @@ public class AuthRestController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Generate JWT token
-            String email = authentication.getName(); // Extract email
-            String token = jwtUtils.generateJwtToken(email); // Generate token
+            System.out.println(authentication.getDetails());
+            String token = jwtUtils.generateJwtToken(loginRequestDTO.getEmail(), userRestService.getUserByEmail(loginRequestDTO.getEmail()).getRole().toString()); // Generate token
 
             // Build success response
             LoginJwtResponseDTO loginResponse = new LoginJwtResponseDTO(token);

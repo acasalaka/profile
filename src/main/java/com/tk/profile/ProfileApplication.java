@@ -32,22 +32,21 @@ public class ProfileApplication {
             var faker = new Faker(new Locale("in-ID"));
             var random = new Random();
 
-            // Insert Faker data for Doctors
-            for (int i = 0; i < 5; i++) { // Create 5 doctors
+            for (int i = 0; i < 5; i++) {
                 var doctor = new Doctor();
                 int specialization = random.nextInt(17);
-
-                doctor.setName(faker.name().fullName());
+                String nama = faker.name().fullName();
+                doctor.setName(doctor.setDoctorName(nama, specialization));
                 doctor.setUsername(faker.name().username());
                 doctor.setPassword(userRestService.hashPassword("password"));
-                doctor.setRole(EndUser.Role.DOCTOR); // Set the role explicitly
+                doctor.setRole(EndUser.Role.DOCTOR);
                 doctor.setEmail(faker.internet().emailAddress());
                 doctor.setGender(random.nextBoolean());
                 doctor.setSpecialist(specialization);
                 doctor.setYearsOfExperience(random.nextInt(30));
 
                 List<Integer> schedules = new ArrayList<>();
-                int scheduleCount = random.nextInt(7) + 1; // Between 1 and 7
+                int scheduleCount = random.nextInt(7) + 1;
                 for (int j = 0; j < scheduleCount; j++) {
                     schedules.add(random.nextInt(7) + 1);
                 }
@@ -62,29 +61,28 @@ public class ProfileApplication {
                 doctorService.addDoctor(doctor);
             }
 
-            // Insert Faker data for Patients
-            for (int i = 0; i < 5; i++) { // Create 5 patients
+            for (int i = 0; i < 5; i++) {
                 var patient = new Patient();
 
                 patient.setName(faker.name().fullName());
                 patient.setUsername(faker.name().username());
                 patient.setPassword(userRestService.hashPassword("password"));
-                patient.setRole(EndUser.Role.PATIENT); // Set the role explicitly
+                patient.setRole(EndUser.Role.PATIENT);
                 patient.setEmail(faker.internet().emailAddress());
                 patient.setGender(random.nextBoolean());
 
                 StringBuilder number = new StringBuilder();
-                number.append(random.nextInt(9) + 1); // Ensure first digit is non-zero
+                number.append(random.nextInt(9) + 1);
 
-                for (int j = 0; j < 15; j++) { // Generate 16-digit NIK
+                for (int j = 0; j < 15; j++) {
                     number.append(random.nextInt(10));
                 }
 
                 String nik = number.toString();
                 patient.setNik(nik);
                 patient.setBirthPlace(faker.address().city());
-                patient.setBirthDate(faker.date().birthday(18, 65)); // Random age between 18 and 65
-                patient.setPClass(random.nextInt(1, 4)); // Random class between 1 and 3
+                patient.setBirthDate(faker.date().birthday(18, 65));
+                patient.setPClass(random.nextInt(1, 4));
 
                 patientService.createPatient(patient);
 
