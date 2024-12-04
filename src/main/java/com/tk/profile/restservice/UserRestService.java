@@ -16,5 +16,6 @@ public interface UserRestService {
     UserResponseDTO userToUserResponseDTO(EndUser endUser);
     <T extends AddEndUserRequestDTO> AddEndUserResponseDTO addUser(T dto);
     UserResponseDTO getUserById(UUID id);
+    UserResponseDTO getUserByEmail(String email);
     UserResponseDTO upgradePatientById(UUID id, int patientClass);
 }

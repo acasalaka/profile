@@ -52,6 +52,17 @@ public class PatientRestServiceImpl implements PatientRestService {
     }
 
     @Override
+    public PatientResponseDTO getPatientById(UUID id) {
+        Patient patient = patientDb.findById(id).orElse(null);
+
+        if (patient == null) {
+            return null;
+        }
+
+        return patientToPatientResponseDTO(patient);
+    }
+
+    @Override
     public PatientResponseDTO patientToPatientResponseDTO(Patient patient) {
         var patientResponseDTO = new PatientResponseDTO();
         patientResponseDTO.setId(patient.getId());

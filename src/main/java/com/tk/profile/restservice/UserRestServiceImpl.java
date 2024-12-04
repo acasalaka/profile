@@ -8,6 +8,7 @@ import com.tk.profile.restdto.request.AddEndUserRequestDTO;
 import com.tk.profile.restdto.response.AddEndUserResponseDTO;
 import com.tk.profile.restdto.response.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -137,6 +138,17 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
+    public UserResponseDTO getUserByEmail(String email){
+        var user = endUserDb.findByEmail(email);
+
+        if (user == null) {
+            return null;
+        }
+
+        return userToUserResponseDTO(user);
+    }
+
+    @Override
     public UserResponseDTO getUserById(UUID id){
         var user = endUserDb.findById(id).orElse(null);
 
@@ -172,15 +184,26 @@ public class UserRestServiceImpl implements UserRestService {
         userResponseDTO.setId(user.getId());
         userResponseDTO.setName(user.getName());
         userResponseDTO.setUsername(user.getUsername());
-        userResponseDTO.setPassword(user.getPassword());
         userResponseDTO.setEmail(user.getEmail());
         userResponseDTO.setGender(user.assignGender());
         userResponseDTO.setCreatedAt(user.getCreatedAt());
         userResponseDTO.setUpdatedAt(user.getUpdatedAt());
         userResponseDTO.setDeleted(user.isDeleted());
         userResponseDTO.setRole(user.getRole().toString());
+        if (user.getRole().toString().equals("PATIENT")){
+            Patient userPatient = (Patient) user;
+            userResponseDTO.setNik(userPatient.getNik());
+            userResponseDTO.setBirthPlace(userPatient.getBirthPlace());
+            userResponseDTO.setBirthDate(userPatient.getBirthDate());
+            userResponseDTO.setPClass(userPatient.getPClass());
+        } else if (user.getRole().toString().equals("DOCTOR")){
+            Doctor userDoctor = (Doctor) user;
+            userResponseDTO.setSpecialist(userDoctor.getSpecialist());
+            userResponseDTO.setYearsOfExperience(userDoctor.getYearsOfExperience());
+            userResponseDTO.setFee(userDoctor.getFee());
+            userResponseDTO.setSchedules(userDoctor.getSchedules());
+        }
 
         return userResponseDTO;
     }
-
 }

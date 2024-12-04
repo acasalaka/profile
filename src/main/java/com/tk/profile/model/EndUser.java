@@ -47,7 +47,7 @@ public class EndUser {
     private String password;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotNull
