@@ -2,6 +2,7 @@ package com.tk.profile.restcontroller;
 
 import com.tk.profile.restdto.response.DoctorResponseDTO;
 import com.tk.profile.restdto.response.BaseResponseDTO;
+import com.tk.profile.restdto.response.DoctorScheduleResponseDTO;
 import com.tk.profile.restservice.DoctorRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,5 +52,25 @@ public class DoctorRestController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/{idDoctor}/schedule")
+    public ResponseEntity<?> getDoctorSchedule(@PathVariable("idDoctor") UUID idDoctor) {
+        var baseResponseDTO = new BaseResponseDTO<DoctorScheduleResponseDTO>();
+
+        var doctorScheduleDTO = doctorRestService.getDoctorSchedule(idDoctor);
+
+        if (doctorScheduleDTO == null) {
+            baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
+            baseResponseDTO.setMessage("Data doctor tidak ditemukan");
+            baseResponseDTO.setTimestamp(new Date());
+            return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+        }
+
+        baseResponseDTO.setStatus(HttpStatus.OK.value());
+        baseResponseDTO.setData(doctorScheduleDTO);
+        baseResponseDTO.setMessage(String.format("Schedule for Doctor ID %s retrieved successfully", idDoctor));
+        baseResponseDTO.setTimestamp(new Date());
+
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
 
 }

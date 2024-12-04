@@ -28,7 +28,6 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor getDoctorById(UUID idDoctor) {
-
         return doctorDb.findById(idDoctor).orElse(null);
     }
 
@@ -47,10 +46,8 @@ public class DoctorServiceImpl implements DoctorService {
             getDoctor.setSchedules(doctor.getSchedules());
             getDoctor.setFee(doctor.getFee());
             doctorDb.save(getDoctor);
-
             return getDoctor;
         }
-
         return null;
     }
 

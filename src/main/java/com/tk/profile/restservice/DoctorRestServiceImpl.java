@@ -3,6 +3,7 @@ package com.tk.profile.restservice;
 import com.tk.profile.model.Doctor;
 import com.tk.profile.repository.DoctorDb;
 import com.tk.profile.restdto.response.DoctorResponseDTO;
+import com.tk.profile.restdto.response.DoctorScheduleResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,22 @@ public class DoctorRestServiceImpl implements DoctorRestService {
     public DoctorResponseDTO getDoctorById(UUID id) {
         Doctor doctor = doctorDb.findById(id).orElse(null);
 
-        if (doctor == null) {
+        if (doctor == null || doctor.isDeleted()) {
             return null;
         }
 
         return doctorToDoctorResponseDTO(doctor);
+    }
+
+    @Override
+    public DoctorScheduleResponseDTO getDoctorSchedule(UUID id) {
+        Doctor doctor = doctorDb.findById(id).orElse(null);
+
+        if (doctor == null || doctor.isDeleted()) {
+            return null;
+        }
+
+        return doctorToDoctorScheduleResponseDTO(doctor);
     }
 
     @Override
@@ -58,5 +70,13 @@ public class DoctorRestServiceImpl implements DoctorRestService {
         doctorResponseDTO.setSchedules(doctor.getSchedules());
 
         return doctorResponseDTO;
+    }
+
+    @Override
+    public DoctorScheduleResponseDTO doctorToDoctorScheduleResponseDTO(Doctor doctor) {
+        var scheduleResponseDTO = new DoctorScheduleResponseDTO();
+        scheduleResponseDTO.setSchedules(doctor.getFourWeeksSchedule());
+
+        return scheduleResponseDTO;
     }
 }

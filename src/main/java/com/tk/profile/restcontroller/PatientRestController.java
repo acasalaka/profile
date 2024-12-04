@@ -30,7 +30,7 @@ public class PatientRestController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{nik}")
+    @GetMapping("/get-nik/{nik}")
     public ResponseEntity<?> detailPatientByNik(@PathVariable("nik") String nik) {
         var baseResponseDTO = new BaseResponseDTO<PatientResponseDTO>();
 

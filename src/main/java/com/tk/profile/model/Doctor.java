@@ -7,8 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -89,60 +92,47 @@ public class Doctor extends EndUser {
         };
     }
 
-    public String getSpecialistString() {
-        return switch (specialist) {
-            case 1 -> "Dokter Gigi";
-            case 2 -> "Spesialis Anak";
-            case 3 -> "Bedah";
-            case 4 -> "Bedah Plastik, Rekonstruksi, dan Estetik";
-            case 5 -> "Jantung dan Pembuluh Darah";
-            case 6 -> "Kulit dan Kelamin";
-            case 7 -> "Mata";
-            case 8 -> "Obstetri dan Ginekologi";
-            case 9 -> "Penyakit Dalam";
-            case 10 -> "Paru";
-            case 11 -> "Telinga, Hidung, Tenggorokan, Bedah Kepala Leher";
-            case 12 -> "Radiologi";
-            case 13 -> "Kesehatan Jiwa";
-            case 14 -> "Anestesi";
-            case 15 -> "Neurologi";
-            case 16 -> "Urologi";
-            default -> "Dokter Umum";
-        };
-    }
-
-    public String getName(int specialist) {
-        String title = getTitle(this.specialist);
-        String degree = getDegree(this.specialist);
+    public String setDoctorName(String name, int specialist) {
+        String title = getTitle(specialist);
+        String degree = getDegree(specialist);
 
         if (!degree.isEmpty()) {
-            return title + " " + getName() + ", " + degree;
+            return title + " " + name + ", " + degree;
         }
-        return title + " " + getName();
+        return title + " " + name;
     }
 
-    public String scheduleString(int schedules) {
-        return switch (schedules) {
-            case 1 -> "Sunday";
-            case 2 -> "Monday";
-            case 3 -> "Tuesday";
-            case 4 -> "Wednesday";
-            case 5 -> "Thursday";
-            case 6 -> "Friday";
-            case 7 -> "Saturday";
-            default -> throw new IllegalStateException("Unexpected value: " + schedules);
+    public List<String> getFourWeeksSchedule() {
+        List<String> scheduleDates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID"));
+
+        for (int i = 0; i < 28; i++) {
+            int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            for (Integer schedule : schedules) {
+                if (currentDayOfWeek == convertScheduleToCalendarDay(schedule)) {
+                    scheduleDates.add(dateFormatter.format(calendar.getTime()));
+                }
+            }
+
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        return scheduleDates;
+    }
+
+    private int convertScheduleToCalendarDay(int schedule) {
+        return switch (schedule) {
+            case 1 -> Calendar.SUNDAY;
+            case 2 -> Calendar.MONDAY;
+            case 3 -> Calendar.TUESDAY;
+            case 4 -> Calendar.WEDNESDAY;
+            case 5 -> Calendar.THURSDAY;
+            case 6 -> Calendar.FRIDAY;
+            case 7 -> Calendar.SATURDAY;
+            default -> throw new IllegalStateException("Unexpected value: " + schedule);
         };
-    }
-
-    public List<String> getScheduleDayStrings() {
-        List<String> dayNames = new ArrayList<>();
-
-        for (Integer schedule : schedules) {
-            String dayName = scheduleString(schedule);
-            dayNames.add(dayName);
-        }
-
-        return dayNames;
     }
 
     public String sanitizeName(String name) {

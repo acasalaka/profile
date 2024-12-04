@@ -33,7 +33,18 @@ public class PatientRestServiceImpl implements PatientRestService {
     public PatientResponseDTO getPatientByNik(String nik) {
         Patient patient = patientDb.findByNik(nik);
 
-        if (patient == null) {
+        if (patient == null || patient.isDeleted()) {
+            return null;
+        }
+
+        return patientToPatientResponseDTO(patient);
+    }
+
+    @Override
+    public PatientResponseDTO getPatientByID(UUID id) {
+        Patient patient = patientDb.findById(id).orElse(null);
+
+        if (patient == null || patient.isDeleted()) {
             return null;
         }
 
