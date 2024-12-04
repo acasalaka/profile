@@ -79,12 +79,12 @@ public class UserRestController {
         }
     }
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<BaseResponseDTO<UserResponseDTO>> userDetail(@PathVariable("id") String id){
+    @GetMapping("/detail/{email}")
+    public ResponseEntity<BaseResponseDTO<UserResponseDTO>> userDetail(@PathVariable("email") String email){
         BaseResponseDTO<UserResponseDTO> baseResponseDTO = new BaseResponseDTO<>();
         
         try {
-            UserResponseDTO userResponseDTO = userRestService.getUserById(UUID.fromString(id));
+            UserResponseDTO userResponseDTO = userRestService.getUserByEmail(email);
             baseResponseDTO.setStatus(HttpStatus.OK.value());
             baseResponseDTO.setData(userResponseDTO);
             baseResponseDTO.setTimestamp(new Date());

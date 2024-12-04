@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface PatientRestService {
     List<PatientResponseDTO> getAllPatients();
     PatientResponseDTO getPatientByNik(String nik);
+    PatientResponseDTO getPatientById(UUID id);
     PatientResponseDTO patientToPatientResponseDTO(Patient patient);
 }

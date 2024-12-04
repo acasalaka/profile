@@ -21,9 +21,10 @@ public class JwtUtils {
     @Value("${profile.app.jwtExpirationMs}")
     private int jwtExpirationMs;
  
-    public String generateJwtToken(String email){
+    public String generateJwtToken(String email, String role){
         return Jwts.builder()
         .subject(email)
+        .claim("role", role)  // Add the role claim to the token
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
         .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
@@ -34,6 +35,12 @@ public class JwtUtils {
         JwtParser jwtParser = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).build();
         Claims claims = jwtParser.parse(token).accept(Jws.CLAIMS).getPayload();
         return claims.getSubject();
+    }
+
+    public String getRoleFromJwtToken(String token){
+        JwtParser jwtParser = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).build();
+        Claims claims = jwtParser.parseClaimsJws(token).getBody();
+        return claims.get("role", String.class);  // Extrac
     }
  
     public boolean validateJwtToken(String authToken){

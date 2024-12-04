@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/patient")
@@ -50,5 +51,25 @@ public class PatientRestController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detailPatientWithId(@PathVariable("id") String id) {
+        var baseResponseDTO = new BaseResponseDTO<PatientResponseDTO>();
+
+        PatientResponseDTO patient = patientRestService.getPatientById(UUID.fromString(id));
+
+        if (patient == null) {
+            baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
+            baseResponseDTO.setMessage("Data patient tidak ditemukan");
+            baseResponseDTO.setTimestamp(new Date());
+            return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+        }
+
+        baseResponseDTO.setStatus(HttpStatus.OK.value());
+        baseResponseDTO.setData(patient);
+        baseResponseDTO.setMessage(String.format("Patient dengan NIK %s berhasil ditemukan", patient.getNik()));
+        baseResponseDTO.setTimestamp(new Date());
+
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
 
 }
