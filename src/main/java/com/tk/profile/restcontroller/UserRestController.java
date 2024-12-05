@@ -100,4 +100,25 @@ public class UserRestController {
             return new ResponseEntity<>(baseResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/detail/id/{id}")
+    public ResponseEntity<BaseResponseDTO<UserResponseDTO>> userDetailWithId(@PathVariable("id") String id){
+        BaseResponseDTO<UserResponseDTO> baseResponseDTO = new BaseResponseDTO<>();
+        
+        try {
+            UserResponseDTO userResponseDTO = userRestService.getUserById(UUID.fromString(id));
+            baseResponseDTO.setStatus(HttpStatus.OK.value());
+            baseResponseDTO.setData(userResponseDTO);
+            baseResponseDTO.setTimestamp(new Date());
+            baseResponseDTO.setMessage(String.format(
+                    "User %s dengan id %s berhasil dicari!",
+                    userResponseDTO.getUsername(),
+                    userResponseDTO.getId().toString()));
+            return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+        } catch (Exception e){
+            baseResponseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            baseResponseDTO.setTimestamp(new Date());
+            baseResponseDTO.setMessage(e.getMessage());
+            return new ResponseEntity<>(baseResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 }
