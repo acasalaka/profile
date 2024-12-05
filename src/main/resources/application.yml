@@ -18,7 +18,7 @@ spring:
             ddl-auto: update
 server:
     port: 8084
-profile:
+profile50:
     app:
-        jwtSecret: "YhEwGneRYubPRrqHmZQVeRrsGZPbbNwFndF"
+        jwtSecret: "hPjbJwZKskRmCnzroyAZfglqSKexYmxKeYPvSvJ"
         jwtExpirationMs: 86400000

@@ -1,7 +1,6 @@
 package com.tk.profile.security.jwt;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,57 +13,55 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
- 
- 
+
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
- 
+
+
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter{
     @Autowired
     private JwtUtils jwtUtils;
- 
+
+
     @Autowired
     private UserDetailsService userDetailService;
- 
+
+
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
- 
+
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        try {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+        try{
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            if(jwt != null && jwtUtils.validateJwtToken(jwt)){
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                String role = jwtUtils.getRoleFromJwtToken(jwt); // Get the role from JWT
+
 
                 UserDetails userDetails = userDetailService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // Check if the user has one of the allowed roles
-                if (Arrays.asList("ADMIN", "DOCTOR", "PATIENT", "NURSE").contains(role)) {
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                } else {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write("You do not have access to this resource!");
-                    return;
-                }
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        } catch (Exception e) {
+        } catch(Exception e){
             logger.error("Cannot set user authentication: {}", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
         filterChain.doFilter(request, response);
     }
- 
+
+
     private String parseJwt(HttpServletRequest request){
         String headerAuth = request.getHeader("Authorization");
- 
+
+
         if(StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){
             return headerAuth.substring(7);
         }

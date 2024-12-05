@@ -21,9 +21,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class UserResponseDTO {
-    private UUID id = UUID.randomUUID();
+    private UUID id;
     private String name;
     private String username;
+    private String password;
     private String email;
     private String gender;
     private String role;

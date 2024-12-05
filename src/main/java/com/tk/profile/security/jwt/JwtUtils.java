@@ -1,63 +1,65 @@
 package com.tk.profile.security.jwt;
 
 import java.util.Date;
- 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
- 
+
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
- 
+
+
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
- 
-    @Value("${profile.app.jwtSecret}")
+
+
+    @Value("${profile50.app.jwtSecret}")
     private String jwtSecret;
- 
-    @Value("${profile.app.jwtExpirationMs}")
+
+
+    @Value("${profile50.app.jwtExpirationMs}")
     private int jwtExpirationMs;
- 
-    public String generateJwtToken(String email, String role){
+
+
+    public String generateJwtToken(String email){
         return Jwts.builder()
-        .subject(email)
-        .claim("role", role)  // Add the role claim to the token
-        .issuedAt(new Date())
-        .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-        .compact();
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                .compact();
     }
- 
+
+
     public String getUserNameFromJwtToken(String token){
         JwtParser jwtParser = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).build();
         Claims claims = jwtParser.parse(token).accept(Jws.CLAIMS).getPayload();
         return claims.getSubject();
     }
 
-    public String getRoleFromJwtToken(String token){
-        JwtParser jwtParser = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).build();
-        Claims claims = jwtParser.parseClaimsJws(token).getBody();
-        return claims.get("role", String.class);  // Extrac
-    }
- 
+
     public boolean validateJwtToken(String authToken){
-        try{
+        try {
             Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).build().parse(authToken);
             return true;
-        }catch(SignatureException e){
+        } catch(SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
-        }catch(IllegalArgumentException e){
+        } catch(IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
-        }catch(MalformedJwtException e){
+        } catch(MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
-        }catch(ExpiredJwtException e){
+        } catch(ExpiredJwtException e) {
             logger.error("JWT token is expired: {}", e.getMessage());
-        }catch(UnsupportedJwtException e){
+        } catch(UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: {}", e.getMessage());
         }
         return false;
     }
+
+
 }

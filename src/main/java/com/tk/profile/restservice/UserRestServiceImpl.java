@@ -130,6 +130,7 @@ public class UserRestServiceImpl implements UserRestService {
         AddEndUserResponseDTO responseDTO = new AddEndUserResponseDTO();
         responseDTO.setId(user.getId());
         responseDTO.setUsername(user.getUsername());
+        responseDTO.setPassword(hashPassword(dto.getPassword()));
         responseDTO.setName(user.getName());
         responseDTO.setEmail(user.getEmail());
         responseDTO.setRole(user.getRole().toString());
@@ -184,6 +185,7 @@ public class UserRestServiceImpl implements UserRestService {
         userResponseDTO.setId(user.getId());
         userResponseDTO.setName(user.getName());
         userResponseDTO.setUsername(user.getUsername());
+        userResponseDTO.setPassword(user.getPassword());
         userResponseDTO.setEmail(user.getEmail());
         userResponseDTO.setGender(user.assignGender());
         userResponseDTO.setCreatedAt(user.getCreatedAt());

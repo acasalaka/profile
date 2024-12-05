@@ -47,7 +47,7 @@ public class AuthRestController {
 
             // Generate JWT token
             System.out.println(authentication.getDetails());
-            String token = jwtUtils.generateJwtToken(loginRequestDTO.getEmail(), userRestService.getUserByEmail(loginRequestDTO.getEmail()).getRole().toString()); // Generate token
+            String token = jwtUtils.generateJwtToken(loginRequestDTO.getEmail()); // Generate token
 
             // Build success response
             LoginJwtResponseDTO loginResponse = new LoginJwtResponseDTO(token);

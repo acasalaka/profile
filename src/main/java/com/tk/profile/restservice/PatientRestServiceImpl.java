@@ -41,32 +41,10 @@ public class PatientRestServiceImpl implements PatientRestService {
     }
 
     @Override
-    public PatientResponseDTO getPatientByID(UUID id) {
+    public PatientResponseDTO getPatientById(UUID id) {
         Patient patient = patientDb.findById(id).orElse(null);
 
         if (patient == null || patient.isDeleted()) {
-            return null;
-        }
-
-        return patientToPatientResponseDTO(patient);
-    }
-
-    @Override
-    public PatientResponseDTO getPatientById(UUID id) {
-        Patient patient = patientDb.findById(id).orElse(null);
-
-        if (patient == null) {
-            return null;
-        }
-
-        return patientToPatientResponseDTO(patient);
-    }
-
-    @Override
-    public PatientResponseDTO getPatientById(UUID id) {
-        Patient patient = patientDb.findById(id).orElse(null);
-
-        if (patient == null) {
             return null;
         }
 
