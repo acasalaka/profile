@@ -168,7 +168,7 @@ public class UserRestServiceImpl implements UserRestService {
             return null;
         }
 
-        if (user.getPClass() >= patientClass){
+        if (user.getPClass() <= patientClass){
             return null;
         }
 

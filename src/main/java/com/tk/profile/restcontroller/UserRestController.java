@@ -121,4 +121,5 @@ public class UserRestController {
             baseResponseDTO.setMessage(e.getMessage());
             return new ResponseEntity<>(baseResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 }
