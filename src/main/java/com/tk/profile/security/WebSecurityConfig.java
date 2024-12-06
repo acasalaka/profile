@@ -48,7 +48,13 @@ public class WebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/doctor/viewall").hasAnyAuthority("ADMIN" ,"PATIENT")
+                .requestMatchers("/api/patient/viewall").hasAnyAuthority("ADMIN" ,"DOCTOR", "NURSE")
+                .requestMatchers("/api/patient/get-nik").hasAnyAuthority("ADMIN" ,"DOCTOR", "NURSE")
+                .requestMatchers("**/schedule").hasAnyAuthority("ADMIN" , "PATIENT")
+                .requestMatchers("/api/user/upgrade").hasAnyAuthority("ADMIN")
                 .requestMatchers("/api/user/add").hasAuthority("ADMIN")
+
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()    
             )
