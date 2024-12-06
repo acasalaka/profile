@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                 .requestMatchers("**/schedule").hasAnyAuthority("ADMIN" , "PATIENT")
                 .requestMatchers("/api/user/upgrade").hasAnyAuthority("ADMIN")
                 .requestMatchers("/api/user/add").hasAuthority("ADMIN")
+                .requestMatchers("/api/user/viewall").hasAuthority("ADMIN")
 
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()    
